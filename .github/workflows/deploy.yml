@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -19,7 +18,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: bash /home/ubuntu/api-rate-limiter-gateway/deploy.sh
-
-
-
+          script: |
+            if [ ! -d "/home/ubuntu/api-rate-limiter-gateway" ]; then
+              git clone https://github.com/prajwal1014/api-rate-limiter-gateway.git /home/ubuntu/api-rate-limiter-gateway
+            fi
+            bash /home/ubuntu/api-rate-limiter-gateway/deploy.sh
