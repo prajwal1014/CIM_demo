@@ -1,14 +1,14 @@
 #!/bin/bash
 
-cd /home/ubuntu/api-rate-limiter-gateway
+cd /home/ubuntu/CIM_demo
 
 echo "Pulling latest code..."
 git pull origin main
 
 echo "Stopping old containers..."
-docker-compose down
+docker compose down
 
-echo "Building & starting services..."
-docker-compose up -d --build
+echo "Starting updated containers..."
+docker compose up -d --build
 
-echo "Deployment complete!"
+echo "Deployment successful!"
