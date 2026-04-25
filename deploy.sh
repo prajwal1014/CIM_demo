@@ -1,17 +1,14 @@
 #!/bin/bash
-set -e
 
 cd /home/ubuntu/api-rate-limiter-gateway
 
+echo "Pulling latest code..."
 git pull origin main
 
-docker stop api-rate-limiter || true
-docker rm api-rate-limiter || true
+echo "Stopping old containers..."
+docker-compose down
 
-docker build -t api-rate-limiter .
+echo "Building & starting services..."
+docker-compose up -d --build
 
-docker run -d \
-  --name api-rate-limiter \
-  -p 8000:8000 \
-  --restart unless-stopped \
-  api-rate-limiter
+echo "Deployment complete!"
