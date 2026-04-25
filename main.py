@@ -1,24 +1,15 @@
 from fastapi import FastAPI, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
-from slowapi.middleware import SlowAPIMiddleware
-from fastapi.responses import JSONResponse
+from app.limiter import rate_limiter
+from app.admin import router as admin_router
 
 app = FastAPI()
 
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_middleware(SlowAPIMiddleware)
+# Middleware
+app.middleware("http")(rate_limiter)
 
-@app.exception_handler(RateLimitExceeded)
-def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    return JSONResponse(
-        status_code=429,
-        content={"message": "Too many requests. Please try again later."},
-    )
+# Admin routes
+app.include_router(admin_router, prefix="/admin")
 
 @app.get("/")
-@limiter.limit("5/minute")
-def home(request: Request):
-    return {"message": "FastAPI Rate Limiter Running 🚀"}
+def home():
+    return {"message": "Cloud Rate Limiter Running 🚀"}
