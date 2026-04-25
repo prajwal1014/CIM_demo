@@ -8,10 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
 
+    steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -19,7 +17,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ ! -d "/home/ubuntu/api-rate-limiter-gateway" ]; then
-              git clone https://github.com/prajwal1014/api-rate-limiter-gateway.git /home/ubuntu/api-rate-limiter-gateway
+            if [ ! -d "/home/ubuntu/CIM_demo" ]; then
+              git clone https://github.com/<your-username>/CIM_demo.git /home/ubuntu/CIM_demo
             fi
-            bash /home/ubuntu/api-rate-limiter-gateway/deploy.sh
+            cd /home/ubuntu/CIM_demo
+            bash deploy.sh
